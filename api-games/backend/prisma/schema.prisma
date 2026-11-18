@@ -1,0 +1,43 @@
+// Define o gerador do Prisma Client (responsável por gerar o código para acessar o banco)
+generator client {
+  provider = "prisma-client"          // Define o tipo de client gerado
+  output   = "../src/generated/prisma" // Caminho onde o client será criado no projeto
+}
+
+// Configura a conexão com o banco de dados
+datasource db {
+  provider = "postgresql" // Define que o banco utilizado é o PostgreSQL
+}
+
+// Define um ENUM (valores fixos) para o tipo de usuário
+enum Role {
+  STAFF // Usuário comum
+  ADMIN // Usuário administrador
+}
+
+// Modelo de usuário (tabela "users" no banco)
+model User {
+  id        String   @id @default(uuid()) // ID único gerado automaticamente (UUID)
+  name      String                        // Nome do usuário
+  email     String   @unique              // Email único (não pode repetir)
+  password  String                        // Senha do usuário
+  role      Role     @default(STAFF)      // Papel do usuário (padrão: STAFF)
+  createdAt DateTime @default(now())      // Data de criação
+  updatedAt DateTime @updatedAt           // Atualiza automaticamente ao modificar o registro
+
+  @@map("users") // Nome da tabela no banco de dados
+}
+
+// Modelo de empresas de jogos (tabela "empresas" no banco)
+model Empresa {
+  id          String   @id @default(uuid()) // ID único
+  nome        String                        // Nome da empresa
+  ceo         String                        // Nome do CEO da empresa
+  anoFundacao Int                           // Ano de fundação da empresa
+  cidade      String                        // Cidade da sede
+  pais        String                        // País da sede
+  createdAt   DateTime @default(now())      // Data de criação
+  updatedAt   DateTime @updatedAt           // Data de atualização automática
+
+  @@map("empresas") // Nome da tabela no banco
+}
