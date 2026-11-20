@@ -19,8 +19,8 @@ Projeto desenvolvido para a disciplina de Projeto de Navegação e Interação (
 - Cadastro de usuário com validação e senha criptografada
 - Login com geração de token JWT (validade de 30 dias)
 - Consulta dos dados do usuário logado
-- Cadastro de empresas (somente ADMIN)
-- Listagem de empresas (usuário autenticado)
+- Cadastro de empresas de jogos (somente ADMIN) e listagem
+- Cadastro de jogos ligados a uma empresa existente (somente ADMIN) e listagem
 
 ## Pré-requisitos
 
@@ -71,7 +71,9 @@ O servidor sobe em `http://localhost:3333`.
 | POST | `/session` | Público | Faz login e retorna o token JWT |
 | GET | `/me` | Autenticado | Dados do usuário logado |
 | POST | `/empresa` | ADMIN | Cadastra uma empresa |
-| GET | `/empresa` | Autenticado | Lista as empresas (mais recentes primeiro) |
+| GET | `/empresa` | Autenticado | Lista as empresas |
+| POST | `/jogo` | ADMIN | Cadastra um jogo ligado a uma empresa |
+| GET | `/jogo` | Autenticado | Lista os jogos com a empresa associada |
 
 Rotas protegidas exigem o header `Authorization: Bearer SEU_TOKEN`.
 
@@ -105,6 +107,16 @@ Resposta: `id`, `name`, `email`, `role` e `token`.
   "pais": "Japão"
 }
 ```
+
+**Cadastrar jogo** `POST /jogo` (token de ADMIN). O `empresa_id` é o id de uma empresa já cadastrada (veja em `GET /empresa`):
+````````````````json
+{
+  "empresa_id": "ID_DA_EMPRESA",
+  "nome": "The Legend of Zelda: Breath of the Wild",
+  "preco": 299.9,
+  "anoLancamento": 2017
+}
+````````````````
 
 ### Como virar administrador
 
