@@ -1,6 +1,9 @@
 // Importa a instância do Prisma (conexão com o banco)
 import prismaClient from "../../prisma/index";
 
+// Importa a função hash do bcryptjs para criptografar a senha do usuário
+import { hash } from "bcryptjs";
+
 // Interface que define os dados necessários para criar um usuário
 interface CreateUserProps {
   name: string;
@@ -29,17 +32,31 @@ class CreateUserService {
       console.log("Erro! Usuário já existe!");
     }
 
+    // Criptografa a senha antes de salvar no banco (boa prática de segurança)
+    const passwordHash = await hash(password, 8);
+
     // Cria um novo usuário no banco de dados
     const user = await prismaClient.user.create({
       data: {
         name: name,
         email: email,
-        password: password,
+        // Salva a senha já criptografada, nunca a senha original
+        password: passwordHash,
+      },
+
+      // O select define exatamente quais dados do banco serão retornados após a operação.
+      // Ou seja, exibidos no Postman
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
       },
     });
 
-    // Retorna o nome do usuário criado
-    return user.name;
+    // Retorna os dados do usuário criado (sem a senha)
+    return user;
   }
 }
 

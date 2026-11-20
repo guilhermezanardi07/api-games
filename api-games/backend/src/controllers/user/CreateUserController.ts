@@ -12,7 +12,7 @@ class CreateUserController {
     const { name, email, password } = req.body;
 
     // Exibe os dados recebidos no console (útil para debug)
-    console.log({ name, email, password });
+    // console.log({ name, email, password }); // Comentado pois não é mais necessário
 
     // Cria uma instância do service
     const createUserService = new CreateUserService();
@@ -25,7 +25,8 @@ class CreateUserController {
     });
 
     // Retorna a resposta em JSON para o cliente
-    res.json({ message: user });
+    // res.json({ message: user });
+    res.json(user);;
   }
 }
 
