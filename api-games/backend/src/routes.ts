@@ -18,6 +18,12 @@ import { isAuthenticated } from "./middlewares/isAuthenticated";
 
 import { DetailUserController } from "./controllers/user/DetailUserController";
 
+import { isAdmin } from "./middlewares/isAdmin";
+
+import { createEmpresaSchema } from "./schemas/empresaSchema";
+
+import { CreateEmpresaController } from "./controllers/empresa/CreateEmpresaController";
+
 
 // Cria uma instância de roteador do Express
 const router = Router();
@@ -40,6 +46,14 @@ router.get(
   "/me", // Endpoint para obter dados do usuário autenticado
   isAuthenticated, // Middleware que verifica se o usuário está autenticado (token válido)
   new DetailUserController().handle // Controller que busca e retorna os dados do usuário
+);
+
+router.post(
+  "/empresa", // Endpoint da rota
+  isAuthenticated, // Verifica se o usuário está autenticado
+  isAdmin, // Verifica se o usuário possui permissão de administrador
+  validateSchema(createEmpresaSchema), // Valida os dados enviados na requisição
+  new CreateEmpresaController().handle // Executa o controller responsável por criar a empresa
 );
 
 // Exporta o router para ser utilizado em outros arquivos (ex: no app principal)
