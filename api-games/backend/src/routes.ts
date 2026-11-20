@@ -24,6 +24,8 @@ import { createEmpresaSchema } from "./schemas/empresaSchema";
 
 import { CreateEmpresaController } from "./controllers/empresa/CreateEmpresaController";
 
+import { ListEmpresaController } from "./controllers/empresa/ListEmpresaController";
+
 
 // Cria uma instância de roteador do Express
 const router = Router();
@@ -54,6 +56,12 @@ router.post(
   isAdmin, // Verifica se o usuário possui permissão de administrador
   validateSchema(createEmpresaSchema), // Valida os dados enviados na requisição
   new CreateEmpresaController().handle // Executa o controller responsável por criar a empresa
+);
+
+router.get(
+  "/empresa", // Endpoint da rota
+  isAuthenticated, // Verifica se o usuário está autenticado
+  new ListEmpresaController().handle // Executa o controller responsável por listar as empresas
 );
 
 // Exporta o router para ser utilizado em outros arquivos (ex: no app principal)
